@@ -199,7 +199,7 @@ function alertBadInput(tablero, fila, columna, numero) {
         }
     }
 
-    // Verificar repetición en el sector primera fila
+    // Verificar repetición en el primer sector de la primera fila
     if (fila >= 0 && fila <= 2 && columna >= 0 && columna <= 2) {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -211,20 +211,11 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
+
+    // Verificar repetición en el segundo sector de la primera fila
     if (fila >= 0 && fila <= 2 && columna >= 3 && columna <= 5) {
         for (let i = 0; i < 3; i++) {
-            for (let j = 3; j < 5; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    if (fila >= 0 && fila <= 2 && columna >= 4 && columna <= 8) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 4; j < 8; j++) {
+            for (let j = 3; j < 6; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
                     numeroRepetidoEnSector = true;
@@ -234,9 +225,22 @@ function alertBadInput(tablero, fila, columna, numero) {
         }
     }
 
-    //Segunda fila de sectores
+    // Verificar repetición en el tercer sector de la primera fila
+    if (fila >= 0 && fila <= 2 && columna >= 6 && columna <= 8) {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 6; j < 9; j++) {
+                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
+                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
+                    numeroRepetidoEnSector = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Verificar repetición en el primer sector de la segunda fila
     if (fila >= 3 && fila <= 5 && columna >= 0 && columna <= 2) {
-        for (let i = 3; i < 5; i++) {
+        for (let i = 3; i < 6; i++) {
             for (let j = 0; j < 3; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -246,8 +250,9 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
+    // Verificar repetición en el segundo sector de la segunda fila
     if (fila >= 3 && fila <= 5 && columna >= 3 && columna <= 5) {
-        for (let i = 3; i < 5; i++) {
+        for (let i = 3; i < 6; i++) {
             for (let j = 3; j < 6; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -257,8 +262,9 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
-    if (fila >= 3 && fila <= 5 && columna >= 4 && columna <= 8) {
-        for (let i = 3; i < 5; i++) {
+    // Verificar repetición en el tercera sector de la segunda fila
+    if (fila >= 3 && fila <= 5 && columna >= 6 && columna <= 8) {
+        for (let i = 3; i < 6; i++) {
             for (let j = 6; j < 9; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -268,9 +274,9 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
-    //Verificacion de sector tercera fila
-    if (fila >= 4 && fila <= 8 && columna >= 0 && columna <= 2) {
-        for (let i = 4; i < 8; i++) {
+    // Verificar repetición en el primer sector de la tercera fila
+    if (fila >= 6 && fila <= 8 && columna >= 0 && columna <= 2) {
+        for (let i = 6; i < 9; i++) {
             for (let j = 0; j < 3; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -280,8 +286,9 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
-    if (fila >= 4 && fila <= 8 && columna >= 3 && columna <= 5) {
-        for (let i = 4; i < 8; i++) {
+    // Verificar repetición en el segundo sector de la tercera fila
+    if (fila >= 6 && fila <= 8 && columna >= 3 && columna <= 5) {
+        for (let i = 6; i < 9; i++) {
             for (let j = 3; j < 6; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -291,8 +298,9 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
-    if (fila >= 4 && fila <= 8 && columna >= 4 && columna <= 8) {
-        for (let i = 4; i < 8; i++) {
+    // Verificar repetición en el tercer sector de la tercera fila
+    if (fila >= 6 && fila <= 8 && columna >= 6 && columna <= 8) {
+        for (let i = 6; i < 8; i++) {
             for (let j = 6; j < 9; j++) {
                 if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
                     console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
@@ -302,7 +310,7 @@ function alertBadInput(tablero, fila, columna, numero) {
             }
         }
     }
-    
+
 
     // Pintar la celda de rojo si hay una repetición
     if (numeroRepetidoEnFila || numeroRepetidoEnColumna || numeroRepetidoEnSector) {
