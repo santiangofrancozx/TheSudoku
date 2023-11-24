@@ -7,9 +7,14 @@
   <title>Sudoku Board</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="sudoku.js"></script>
+  <style>
+    body {
+      background-color: darkblue;
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-blue-900 flex items-center justify-center h-screen"></body>
   <div class="bg-white p-6 rounded-md shadow-md">
     <h1 class="text-2xl font-bold mb-4">Sudoku Board</h1>
     <div id="sudoku-board" class="grid grid-cols-9 gap-1">
@@ -20,7 +25,7 @@
       <button onclick="loadFile()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Cargar archivo</button>
     </div>
     <div class="bg-white p-6 rounded-md shadow-md">
-      <button onclick="print()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Imprimir sudoku</button>
+      <button onclick="solveSudoku()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Imprimir sudoku</button>
     </div>
     
   </div>

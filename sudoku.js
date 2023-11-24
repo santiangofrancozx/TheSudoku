@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', function renderSudokuBoard() {
             input.style.width = '50%';
             input.style.height = '50%';
             input.style.textAlign = 'center';
+            input.id = `cell-${i}-${j}`;
+            input.className = "cell";
 
             input.addEventListener('input', function (e) {
                 // Aplica las restricciones necesarias aquí del sudoku board
@@ -72,6 +74,8 @@ function renderSudokuBoardFile(initialMatrix) {
             input.style.width = '50%';
             input.style.height = '50%';
             input.style.textAlign = 'center';
+            input.id = `cell-${i}-${j}`;
+            input.className = "cell";
 
             // Establecer el valor inicial desde la matriz proporcionada
             if (initialMatrix[i][j] !== 0) {
@@ -175,147 +179,41 @@ function seeBoard() {
     return sudokuMatrix
 }
 
+function alertBadInput(board, row, col, num) {
+    const gridSize = 9;
 
-function alertBadInput(tablero, fila, columna, numero) {
-    let numeroRepetidoEnFila = false;
-    let numeroRepetidoEnColumna = false;
-    let numeroRepetidoEnSector = false;
-
-    // Verificar repetición en la fila
+    // Check row and column for conflicts
     for (let i = 0; i < 9; i++) {
-        if (Number(tablero[fila][i]) === Number(numero) && i !== columna) {
-            console.log("Se encontró el número repetido en la misma fila en: " + fila + ":" + columna);
-            numeroRepetidoEnFila = true;
-            break;
+        if (Number(board[row][i]) === Number(num) && i !== Number(col)) {
+            console.log("Se encontró el número repetido en la misma fila en: " + row + ":" + col);
+            pintarCeldaRojo(row, col);
+            return false;
         }
     }
-
-    // Verificar repetición en la columna
     for (let i = 0; i < 9; i++) {
-        if (Number(tablero[i][columna]) === Number(numero) && i !== fila) {
-            console.log("Se encontró el número repetido en la misma columna en: " + fila + ":" + columna);
-            numeroRepetidoEnColumna = true;
-            break;
+        if (Number(board[i][col]) === Number(num) && i !== Number(row)) {
+            console.log("Se encontró el número repetido en la misma columna en: " + row + ":" + col);
+            pintarCeldaRojo(row, col);
+            return false;
         }
     }
 
-    // Verificar repetición en el primer sector de la primera fila
-    if (fila >= 0 && fila <= 2 && columna >= 0 && columna <= 2) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
+    // Check the 3*3 subgrid for conflicts
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
+    console.log("start row: "+startRow);
+    console.log("start Col: "+startCol);
 
-    // Verificar repetición en el segundo sector de la primera fila
-    if (fila >= 0 && fila <= 2 && columna >= 3 && columna <= 5) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 3; j < 6; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
+    for (let i = startRow; i < startRow + 3; i++) {
+        for (let j = startCol; j < startCol + 3; j++) {
+            if (Number(board[i][j]) === Number(num) && (i !== Number(row) || j !== Number(col))) {
+                console.log("Numero repetido en sector");
+                pintarCeldaRojo(row, col);
+                return false; // Conflict found
             }
         }
     }
-
-    // Verificar repetición en el tercer sector de la primera fila
-    if (fila >= 0 && fila <= 2 && columna >= 6 && columna <= 8) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 6; j < 9; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    // Verificar repetición en el primer sector de la segunda fila
-    if (fila >= 3 && fila <= 5 && columna >= 0 && columna <= 2) {
-        for (let i = 3; i < 6; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    // Verificar repetición en el segundo sector de la segunda fila
-    if (fila >= 3 && fila <= 5 && columna >= 3 && columna <= 5) {
-        for (let i = 3; i < 6; i++) {
-            for (let j = 3; j < 6; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    // Verificar repetición en el tercera sector de la segunda fila
-    if (fila >= 3 && fila <= 5 && columna >= 6 && columna <= 8) {
-        for (let i = 3; i < 6; i++) {
-            for (let j = 6; j < 9; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    // Verificar repetición en el primer sector de la tercera fila
-    if (fila >= 6 && fila <= 8 && columna >= 0 && columna <= 2) {
-        for (let i = 6; i < 9; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    // Verificar repetición en el segundo sector de la tercera fila
-    if (fila >= 6 && fila <= 8 && columna >= 3 && columna <= 5) {
-        for (let i = 6; i < 9; i++) {
-            for (let j = 3; j < 6; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-    // Verificar repetición en el tercer sector de la tercera fila
-    if (fila >= 6 && fila <= 8 && columna >= 6 && columna <= 8) {
-        for (let i = 6; i < 8; i++) {
-            for (let j = 6; j < 9; j++) {
-                if (Number(numero) === Number(tablero[i][j]) && (i !== fila || j !== columna)) {
-                    console.log("El número se repite en el mismo sector en: " + fila + ":" + columna);
-                    numeroRepetidoEnSector = true;
-                    break;
-                }
-            }
-        }
-    }
-
-
-    // Pintar la celda de rojo si hay una repetición
-    if (numeroRepetidoEnFila || numeroRepetidoEnColumna || numeroRepetidoEnSector) {
-        pintarCeldaRojo(fila, columna);
-    }
+    return true;
 }
 
 function pintarCeldaRojo(fila, columna) {
@@ -323,6 +221,79 @@ function pintarCeldaRojo(fila, columna) {
     const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
     celda.style.backgroundColor = 'red';
     celda.style.color = 'white';
+}
+
+//solve sudoku
+async function solveSudoku() {
+    const gridSize = 9;
+    const sudokuArray = [];
+
+    // Fill the sudokuArray with input values from the grid
+    for (let row = 0; row < gridSize; row++) {
+        sudokuArray[row] = [];
+        for (let col = 0; col < gridSize; col++) {
+            const cellId = `cell-${row}-${col}`;
+            const cellValue = document.getElementById(cellId).value;
+            sudokuArray[row][col] = cellValue !== "" ? parseInt(cellValue) : 0;
+        }
+    }
+
+    // Identify user-input cells and mark them
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            const cellId = `cell-${row}-${col}`;
+            const cell = document.getElementById(cellId);
+
+            if (sudokuArray[row][col] !== 0) {
+                cell.classList.add("user-input");
+            }
+        }
+    }
+
+    // Solve the sudoku and display the solution
+    if (solveSudokuHelper(sudokuArray)) {
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+                const cellId = `cell-${row}-${col}`;
+                const cell = document.getElementById(cellId);
+
+                // Fill in solved values and apply animation
+                if (!cell.classList.contains("user-input")) {
+                    cell.value = sudokuArray[row][col];
+                    cell.classList.add("solved");
+         //           await sleep(20); // Add a delay for visualization
+                }
+            }
+        }
+    } else {
+        alert("No solution exists for the given Sudoku puzzle.");
+    }
+}
+
+function solveSudokuHelper(board) {
+    const gridSize = 9;
+
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            if (board[row][col] === 0) {
+                for (let num = 1; num <= 9; num++) {
+                    if (alertBadInput(board, row, col, num)) {
+                        board[row][col] = num;
+
+                        // Recursively attempt to solve the Sudoku
+                        if (solveSudokuHelper(board)) {
+                            return true; // Puzzle solved
+                        }
+
+                        board[row][col] = 0; // Backtrack
+                    }
+                }
+                return false; // No valid number found
+            }
+        }
+    }
+
+    return true; // All cells filled
 }
 
 
