@@ -216,6 +216,43 @@ function alertBadInput(board, row, col, num) {
     return true;
 }
 
+function alertBadInputReturn(board, row, col, num) {
+    const gridSize = 9;
+
+    // Check row and column for conflicts
+    for (let i = 0; i < 9; i++) {
+        if (Number(board[row][i]) === Number(num) && i !== Number(col)) {
+            console.log("Se encontró el número repetido en la misma fila en: " + row + ":" + col);
+            //pintarCeldaRojo(row, col);
+            return false;
+        }
+    }
+    for (let i = 0; i < 9; i++) {
+        if (Number(board[i][col]) === Number(num) && i !== Number(row)) {
+            console.log("Se encontró el número repetido en la misma columna en: " + row + ":" + col);
+            //pintarCeldaRojo(row, col);
+            return false;
+        }
+    }
+
+    // Check the 3*3 subgrid for conflicts
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
+    console.log("start row: "+startRow);
+    console.log("start Col: "+startCol);
+
+    for (let i = startRow; i < startRow + 3; i++) {
+        for (let j = startCol; j < startCol + 3; j++) {
+            if (Number(board[i][j]) === Number(num) && (i !== Number(row) || j !== Number(col))) {
+                console.log("Numero repetido en sector");
+                //pintarCeldaRojo(row, col);
+                return false; // Conflict found
+            }
+        }
+    }
+    return true;
+}
+
 function pintarCeldaRojo(fila, columna) {
     // Obtener la celda correspondiente y aplicar el estilo
     const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
@@ -277,7 +314,7 @@ function solveSudokuHelper(board) {
         for (let col = 0; col < gridSize; col++) {
             if (board[row][col] === 0) {
                 for (let num = 1; num <= 9; num++) {
-                    if (alertBadInput(board, row, col, num)) {
+                    if (alertBadInputReturn(board, row, col, num)) {
                         board[row][col] = num;
 
                         // Recursively attempt to solve the Sudoku
