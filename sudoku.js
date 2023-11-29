@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function renderSudokuBoard() {
                 console.log(this.value)
                 console.log(this.Array)
                 alertBadInput(seeBoard(), i, j, this.value)
+                pintarCeldaRojo(i,j,alertBadInput(seeBoard(), i, j, this.value))
                 seeBoard();
                 if (this.value === '') {
                     this.style.backgroundColor = '';
@@ -92,6 +93,7 @@ function renderSudokuBoardFile(initialMatrix) {
                 console.log(this.value)
                 console.log(this.Array)
                 alertBadInput(seeBoard(), i, j, this.value)
+                pintarCeldaRojo(i,j,alertBadInput(seeBoard(), i, j, this.value))
                 seeBoard();
                 if (this.value === '') {
                     this.style.backgroundColor = '';
@@ -186,14 +188,14 @@ function alertBadInput(board, row, col, num) {
     for (let i = 0; i < 9; i++) {
         if (Number(board[row][i]) === Number(num) && i !== Number(col)) {
             console.log("Se encontró el número repetido en la misma fila en: " + row + ":" + col);
-            pintarCeldaRojo(row, col);
+            //pintarCeldaRojo(row, col);
             return false;
         }
     }
     for (let i = 0; i < 9; i++) {
         if (Number(board[i][col]) === Number(num) && i !== Number(row)) {
             console.log("Se encontró el número repetido en la misma columna en: " + row + ":" + col);
-            pintarCeldaRojo(row, col);
+            //pintarCeldaRojo(row, col);
             return false;
         }
     }
@@ -208,7 +210,7 @@ function alertBadInput(board, row, col, num) {
         for (let j = startCol; j < startCol + 3; j++) {
             if (Number(board[i][j]) === Number(num) && (i !== Number(row) || j !== Number(col))) {
                 console.log("Numero repetido en sector");
-                pintarCeldaRojo(row, col);
+                //pintarCeldaRojo(row, col);
                 return false; // Conflict found
             }
         }
@@ -253,11 +255,13 @@ function alertBadInputReturn(board, row, col, num) {
     return true;
 }
 
-function pintarCeldaRojo(fila, columna) {
+function pintarCeldaRojo(fila, columna, booleanValue) {
     // Obtener la celda correspondiente y aplicar el estilo
-    const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
-    celda.style.backgroundColor = 'red';
-    celda.style.color = 'white';
+    if(!booleanValue){
+        const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
+        celda.style.backgroundColor = 'red';
+        celda.style.color = 'white';
+    }
 }
 
 //solve sudoku
