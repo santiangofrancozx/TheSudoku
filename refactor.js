@@ -2,22 +2,53 @@ let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
 }
-const sudokuMatrixTest = [
-    [9, 6, 0, 0, 7, 4, 0, 0, 8],
-    [1, 0, 8, 0, 2, 0, 6, 4, 9],
-    [0, 5, 4, 0, 0, 0, 0, 0, 0],
-    [8, 2, 1, 0, 3, 7, 0, 9, 6],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [7, 0, 5, 0, 6, 1, 0, 2, 4],
-    [0, 0, 0, 0, 0, 3, 0, 6, 0],
-    [0, 0, 7, 0, 4, 0, 0, 0, 0],
-    [6, 0, 2, 0, 9, 0, 1, 7, 3]
-];
+document.addEventListener('DOMContentLoaded', function renderSudokuBoard() {
+    const sudokuBoard = document.getElementById('sudoku-board');
 
-document.addEventListener('DOMContentLoaded', function () {
-    renderSudokuBoardFile(sudokuMatrixTest);
-});
+    // Loop through each row generate row for the sudoku
+    for (let i = 0; i < 9; i++) {
+        // Loop through each column generate columns for the sudoku
+        for (let j = 0; j < 9; j++) {
+            const cell = document.createElement('div');
+            cell.className = 'bg-gray-300 flex items-center justify-center h-12 w-12';
 
+            if (j % 3 === 2) cell.classList.add('border-r-2', 'border-black');
+            if (i % 3 === 2) cell.classList.add('border-b-2', 'border-black');
+            if (i % 3 === 0) cell.classList.add('border-t-2', 'border-black');
+            if (j % 3 === 0) cell.classList.add('border-l-2', 'border-black');
+
+
+            // Create an input field for sudoku board entries
+            const input = document.createElement('input');
+            input.type = 'char';
+            input.style.width = '50%';
+            input.style.height = '50%';
+            input.style.textAlign = 'center';
+            input.id = `cell-${i}-${j}`;
+            input.className = "cell";
+
+            input.addEventListener('input', function (e) {
+                // Aplica las restricciones necesarias aquí del sudoku board
+                if (!/^[1-9]?$/.test(this.value)) {
+                    this.value = '';
+                }
+                console.log("fila: " + i + "\n" + "Columna: " + j)
+                console.log(this.value)
+                console.log(this.Array)
+                alertBadInput(seeBoard(), i, j, this.value)
+                pintarCeldaRojo(i,j,alertBadInput(seeBoard(), i, j, this.value))
+                seeBoard();
+                if (this.value === '') {
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                }
+            });
+
+            cell.appendChild(input);
+            sudokuBoard.appendChild(cell);
+        }
+    }
+})
 
 function renderSudokuBoardFile(initialMatrix) {
     const sudokuBoard = document.getElementById('sudoku-board');
@@ -62,7 +93,7 @@ function renderSudokuBoardFile(initialMatrix) {
                 console.log(this.value)
                 console.log(this.Array)
                 alertBadInput(seeBoard(), i, j, this.value)
-                pintarCeldaRojo(i, j, alertBadInput(seeBoard(), i, j, this.value))
+                pintarCeldaRojo(i,j,alertBadInput(seeBoard(), i, j, this.value))
                 seeBoard();
                 if (this.value === '') {
                     this.style.backgroundColor = '';
@@ -76,7 +107,7 @@ function renderSudokuBoardFile(initialMatrix) {
         }
     }
 }
-//this is for upload files valid
+
 function isValidSudokuDocument(contents) {
     const lines = contents.split('\n');
 
@@ -124,8 +155,6 @@ function loadFile() {
                 console.log("Líneas procesadas:", arrayOfArrays); // Registrar las líneas procesadas
 
                 // Llamar a la función con la matriz procesada
-                console.log(arrayOfArrays)
-                console.log(typeof (arrayOfArrays))
                 renderSudokuBoardFile(arrayOfArrays);
             } catch (error) {
                 console.error('Error al procesar el archivo:', error.message);
@@ -135,7 +164,7 @@ function loadFile() {
         reader.readAsText(file);
     }
 }
-//for debbugin see board in console
+
 function seeBoard() {
     const sudokuBoard = document.getElementById('sudoku-board');
     const inputs = sudokuBoard.querySelectorAll('input');
@@ -151,7 +180,7 @@ function seeBoard() {
     console.log(sudokuMatrix)
     return sudokuMatrix
 }
-//alerta bad inputs return false, all good return true
+
 function alertBadInput(board, row, col, num) {
     const gridSize = 9;
 
@@ -174,8 +203,8 @@ function alertBadInput(board, row, col, num) {
     // Check the 3*3 subgrid for conflicts
     const startRow = Math.floor(row / 3) * 3;
     const startCol = Math.floor(col / 3) * 3;
-    console.log("start row: " + startRow);
-    console.log("start Col: " + startCol);
+    console.log("start row: "+startRow);
+    console.log("start Col: "+startCol);
 
     for (let i = startRow; i < startRow + 3; i++) {
         for (let j = startCol; j < startCol + 3; j++) {
@@ -188,17 +217,54 @@ function alertBadInput(board, row, col, num) {
     }
     return true;
 }
-//identifie bad inputs and paint the town red ains like doja cat
+
+function alertBadInputReturn(board, row, col, num) {
+    const gridSize = 9;
+
+    // Check row and column for conflicts
+    for (let i = 0; i < 9; i++) {
+        if (Number(board[row][i]) === Number(num) && i !== Number(col)) {
+            console.log("Se encontró el número repetido en la misma fila en: " + row + ":" + col);
+            //pintarCeldaRojo(row, col);
+            return false;
+        }
+    }
+    for (let i = 0; i < 9; i++) {
+        if (Number(board[i][col]) === Number(num) && i !== Number(row)) {
+            console.log("Se encontró el número repetido en la misma columna en: " + row + ":" + col);
+            //pintarCeldaRojo(row, col);
+            return false;
+        }
+    }
+
+    // Check the 3*3 subgrid for conflicts
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
+    console.log("start row: "+startRow);
+    console.log("start Col: "+startCol);
+
+    for (let i = startRow; i < startRow + 3; i++) {
+        for (let j = startCol; j < startCol + 3; j++) {
+            if (Number(board[i][j]) === Number(num) && (i !== Number(row) || j !== Number(col))) {
+                console.log("Numero repetido en sector");
+                //pintarCeldaRojo(row, col);
+                return false; // Conflict found
+            }
+        }
+    }
+    return true;
+}
+
 function pintarCeldaRojo(fila, columna, booleanValue) {
     // Obtener la celda correspondiente y aplicar el estilo
-    if (!booleanValue) {
+    if(!booleanValue){
         const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
         celda.style.backgroundColor = 'red';
         celda.style.color = 'white';
     }
 }
 
-//solve sudoku resursively algorithm
+//solve sudoku
 async function solveSudoku() {
     const gridSize = 9;
     const sudokuArray = [];
@@ -236,7 +302,7 @@ async function solveSudoku() {
                 if (!cell.classList.contains("user-input")) {
                     cell.value = sudokuArray[row][col];
                     cell.classList.add("solved");
-                    //           await sleep(20); // Add a delay for visualization
+         //           await sleep(20); // Add a delay for visualization
                 }
             }
         }
@@ -252,7 +318,7 @@ function solveSudokuHelper(board) {
         for (let col = 0; col < gridSize; col++) {
             if (board[row][col] === 0) {
                 for (let num = 1; num <= 9; num++) {
-                    if (alertBadInput(board, row, col, num)) {
+                    if (alertBadInputReturn(board, row, col, num)) {
                         board[row][col] = num;
 
                         // Recursively attempt to solve the Sudoku
