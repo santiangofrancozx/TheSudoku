@@ -1,3 +1,6 @@
+
+
+
 let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
@@ -46,6 +49,7 @@ function renderSudokuBoardFile(initialMatrix) {
             input.style.textAlign = 'center';
             input.id = `cell-${i}-${j}`;
             input.className = "cell";
+            
 
             // Establecer el valor inicial desde la matriz proporcionada
             if (initialMatrix[i][j] !== 0) {
@@ -76,9 +80,68 @@ function renderSudokuBoardFile(initialMatrix) {
         }
     }
 }
-//this is for upload files valid
+//this is for upload files valid sudoku boards
+
+function checkRowForDuplicates(matrix, row) {
+    let testArray = [];
+    for (let i = 0; i < 9; i++) {
+        testArray.push(matrix[row][i]);
+    }
+    testArray = testArray.filter(num => num !== 0);
+    return new Set(testArray).size != testArray.length;
+}
+
+function checkColumnForDuplicates(matrix, column) {
+    let testArray = [];
+    for (let i = 0; i < 9; i++) {
+        testArray.push(matrix[i][column]);
+    }
+    testArray = testArray.filter(num => num !== 0);
+    return new Set(testArray).size != testArray.length;
+}
+
+function checkSubgridForDuplicates(board, row, col) {
+    let testBoard = [];
+
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
+
+    for (let i = startRow; i < startRow + 3; i++) {
+        for (let j = startCol; j < startCol + 3; j++) {
+            testBoard.push(board[i][j]);
+        }
+    }
+    testBoard = testBoard.filter(num => num !== 0);
+    return new Set(testBoard).size != testBoard.length;
+}
+
 function isValidSudokuDocument(contents) {
     const lines = contents.split('\n');
+
+    // Validar y convertir cada línea en un array de números
+    const arrayOfArrays = contents.split('\n').map(line =>
+        line.trim().split('').map(char => (char === '-' ? 0 : Number(char)))
+    );
+
+    // //verificar que sea un sudoku valido
+    for(let i =0; i<9; i++){
+        if(checkRowForDuplicates(arrayOfArrays, i)){
+            alert("No tamos melos en las filas brodel");
+            return false;
+        }
+        if(checkColumnForDuplicates(arrayOfArrays, i)){
+            alert("No tamos melos en las comunas brodel");
+            return false;
+        }
+    }
+    // for(let i = 0; i<9; i+3){
+    //     for(let j = 0; j<9; j+3){
+    //         if(checkSubgridForDuplicates(arrayOfArrays, i, j)){
+    //             alert("No tamos melos en los sectores brodel");
+    //             return false;
+    //         }
+    //     }
+    // }
 
     // Verificar que haya exactamente 9 líneas
     if (lines.length !== 9) {
@@ -94,23 +157,27 @@ function isValidSudokuDocument(contents) {
         }
     }
 
+    
+      
     return true;
 }
 
 function loadFile() {
     const fileInput = document.getElementById('file-input');
     const file = fileInput.files[0];
+    
 
     if (file) {
         alert("Archivo cargado exitosamente");
         const reader = new FileReader();
 
         reader.onload = function (e) {
+            
             try {
                 const contents = e.target.result;
 
                 if (!isValidSudokuDocument(contents)) {
-                    console.error('El documento no cumple con los requisitos para procesarse.');
+                    alert('El documento no cumple con los requisitos para procesarse.');
                     return;
                 }
 
@@ -127,6 +194,7 @@ function loadFile() {
                 console.log(arrayOfArrays)
                 console.log(typeof (arrayOfArrays))
                 renderSudokuBoardFile(arrayOfArrays);
+                
             } catch (error) {
                 console.error('Error al procesar el archivo:', error.message);
             }
@@ -144,7 +212,7 @@ function seeBoard() {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
             const value = parseInt(inputs[index].value);
-            sudokuMatrix[i][j] = value;
+            sudokuMatrix[i][j] = isNaN(value) ? 0 : value;
             index++;
         }
     }
@@ -188,7 +256,7 @@ function alertBadInput(board, row, col, num) {
     }
     return true;
 }
-//identifie bad inputs and paint the town red ains like doja cat
+//identifie bad inputs and paint it red
 function pintarCeldaRojo(fila, columna, booleanValue) {
     // Obtener la celda correspondiente y aplicar el estilo
     if (!booleanValue) {
