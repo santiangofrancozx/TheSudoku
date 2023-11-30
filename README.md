@@ -1,2 +1,2 @@
 # TheSudoku
-Test:http://www.santiangofrancozx.github.io.thesudoku/
+Test:https://santiangofrancozx.github.io/TheSudoku/
