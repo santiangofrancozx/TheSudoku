@@ -1,10 +1,8 @@
-
-
-
 let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
 }
+
 const sudokuMatrixTest = [
     [9, 6, 0, 0, 7, 4, 0, 0, 8],
     [1, 0, 8, 0, 2, 0, 6, 4, 9],
@@ -24,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function renderSudokuBoardFile(initialMatrix) {
     const sudokuBoard = document.getElementById('sudoku-board');
+    const celdasIniciales = [];
 
     // Limpiar el contenido actual del tablero 0 - rederecia de Nan
     sudokuBoard.innerHTML = '';
@@ -49,12 +48,15 @@ function renderSudokuBoardFile(initialMatrix) {
             input.style.textAlign = 'center';
             input.id = `cell-${i}-${j}`;
             input.className = "cell";
+            input.style.backgroundColor = 'white';
             
 
             // Establecer el valor inicial desde la matriz proporcionada
             if (initialMatrix[i][j] !== 0) {
                 input.value = initialMatrix[i][j].toString();
                 input.disabled = true; // Deshabilitar la edición de celdas iniciales
+                input.style.backgroundColor = "#CDC9C8";
+                celdasIniciales.push({ fila: i, columna: j });
             }
 
             input.addEventListener('input', function (e) {
@@ -67,6 +69,11 @@ function renderSudokuBoardFile(initialMatrix) {
                 console.log(this.Array)
                 alertBadInput(seeBoard(), i, j, this.value)
                 pintarCeldaRojo(i, j, alertBadInput(seeBoard(), i, j, this.value))
+                if(verifieSudoku(sudokuMatrix)){
+                    alert('terminaste canson')
+                }
+                
+                
                 seeBoard();
                 if (this.value === '') {
                     this.style.backgroundColor = '';
@@ -74,12 +81,32 @@ function renderSudokuBoardFile(initialMatrix) {
                 }
 
             });
+            //event kistener para el foco del input selecciona filas y columnas pinta del color enviado, ''
+            input.addEventListener('focus', function() {
+                //pintarCeldaRojo(i, j, alertBadInput(seeBoard(), i, j, this.value));
+                pintarCeldaFilaColumna(i,j, '#ECD007',this.value);
+                if(verifieSudoku(initialMatrix)){
+                    alert('terminaste canson')
+                }
+            });
+            
+            // Event listener para cuando el input pierde el foco
+            input.addEventListener('blur', function() {
+                pintarCeldaFilaColumna(i,j, 'white',this.value);
+                pintarInitialsCells(initialMatrix);
+                this.style.color = '';
+                if(verifieSudoku(initialMatrix)){
+                    alert('terminaste canson')
+                }
+                //pintarInitialsCells(initialMatrix);
 
+            });
             cell.appendChild(input);
             sudokuBoard.appendChild(cell);
         }
     }
 }
+
 //this is for upload files valid sudoku boards
 
 function checkRowForDuplicates(matrix, row) {
@@ -265,6 +292,47 @@ function pintarCeldaRojo(fila, columna, booleanValue) {
         celda.style.color = 'white';
     }
 }
+function pintarInitialsCells(initialMatrix){
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const input = document.querySelector(`#sudoku-board > div:nth-child(${i * 9 + j + 1}) > input`);
+            //const input = document.getElementById(`cell-${i}-${j}`);
+            if (initialMatrix[i][j] !== 0) {
+                input.style.backgroundColor = '#CDC9C8';
+            }
+        }
+    }
+}
+
+function pintarCeldaFilaColumna(fila, columna, color, num) {
+  
+    for (let j = 0; j < 9; j++) {
+        const rowCell = document.getElementById(`cell-${fila}-${j}`);
+        rowCell.style.backgroundColor = color;
+    }
+
+    // Pintar la columna del color recibido
+    for (let i = 0; i < 9; i++) {
+        const colCell = document.getElementById(`cell-${i}-${columna}`);
+        colCell.style.backgroundColor = color;
+    }
+    //pintar el sector del color recibido
+    const sectorStartRow = Math.floor(fila / 3) * 3;
+    const sectorStartCol = Math.floor(columna / 3) * 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const sectorCell = document.getElementById(`cell-${sectorStartRow + i}-${sectorStartCol + j}`);
+            sectorCell.style.backgroundColor = color;
+        }
+    }
+    if(alertBadInput(sudokuMatrix,fila,columna,num)){
+        const cell = document.getElementById(`cell-${fila}-${columna}`);
+        cell.style.backgroundColor = 'white';
+    } else{
+        const cell = document.getElementById(`cell-${fila}-${columna}`);
+        cell.style.backgroundColor = 'red';
+    }
+}
 
 //solve sudoku resursively algorithm
 async function solveSudoku() {
@@ -311,6 +379,7 @@ async function solveSudoku() {
     } else {
         alert("No solution exists for the given Sudoku puzzle.");
     }
+    
 }
 
 function solveSudokuHelper(board) {
@@ -338,5 +407,20 @@ function solveSudokuHelper(board) {
 
     return true; // All cells filled
 }
+
+//lo heavy
+function verifieSudoku(board) {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            if (Number(board[row][col]) === 0) {
+                // Si alguna celda contiene 0, el Sudoku no está completo
+                return false;
+            }
+        }
+    }
+    // Si no se encontró ninguna celda con 0, el Sudoku está completo
+    return true;
+}
+
 
 
