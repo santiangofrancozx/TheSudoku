@@ -3,7 +3,7 @@ let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
 }
-const sugerys = new HashTable();
+let sugerys = new HashTable();
 
 const sudokuMatrixTest = [
     [9, 6, 0, 0, 7, 4, 0, 0, 8],
@@ -19,6 +19,7 @@ const sudokuMatrixTest = [
 
 document.addEventListener('DOMContentLoaded', function () {
     renderSudokuBoardFile(sudokuMatrixTest);
+    updateSugerys();
 });
 
 
@@ -109,14 +110,13 @@ function renderSudokuBoardFile(initialMatrix) {
             });
             //event kistener para el foco del input selecciona filas y columnas pinta del color enviado, ''
             input.addEventListener('focus', function() {
-
-                sugerys.set(input.id, sugerencias(seeBoard(), i,j));
-                console.log("hash: "+sugerys.get(input.id));
                 pintarCeldaFilaColumna(i,j, '#ECD007',this.value);
                 console.log(sugerencias(seeBoard(),i,j));
                 if(verifieSudoku(initialMatrix)){
                     alert('terminaste canson')
                 }
+                // sugerys.set(input.id, sugerencias(seeBoard(), i,j));
+                // console.log("hash: "+sugerys.get(input.id));
                 const sugerenciasContainer = document.getElementById('sugerencias-container');
                 sugerenciasContainer.innerHTML = '';
 
@@ -277,7 +277,7 @@ function loadFile() {
                 console.log(arrayOfArrays)
                 console.log(typeof (arrayOfArrays))
                 renderSudokuBoardFile(arrayOfArrays);
-                
+                updateSugerys();
             } catch (error) {
                 console.error('Error al procesar el archivo:', error.message);
             }
@@ -489,6 +489,17 @@ function sugerencias(matriz, row, col){
         }
     }
     return sugery;
+}
+function updateSugerys(){
+    const input = document.createElement('input');
+    for (let i = 0; i < 9; i++) {
+        // Bucle a través de cada columna para generar columnas para el sudoku
+        for (let j = 0; j < 9; j++) {
+            const inputId = `cell-${i}-${j}`;
+            sugerys.set(inputId, sugerencias(seeBoard(), i, j));
+            console.log(`Hash para ${inputId}: ${sugerys.get(inputId)}`);
+        }
+    }
 }
 
 
