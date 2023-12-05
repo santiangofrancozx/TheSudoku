@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sudoku Board</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="sudoku.js"></script>
+  
   <style>
     body {
       background-color: darkblue;
@@ -14,22 +14,30 @@
   </style>
 </head>
 
-<body class="bg-blue-900 flex items-center justify-center h-screen"></body>
+<body class="bg-blue-900 flex items-center justify-center h-screen">
+
+  <script src="tablaHash.js"></script>
+  <script src="sudoku.js"></script>
+  
   <div class="bg-white p-6 rounded-md shadow-md">
     <h1 class="text-2xl font-bold mb-4">Sudoku Board</h1>
+    <div id="sugerencias-container" class="mt-2 max-h-32 overflow-y-auto"></div>
     <div id="sudoku-board" class="grid grid-cols-9 gap-1">
       <!--My Suodku Board-->
     </div>
+    
     <div class="bg-white p-6 rounded-md shadow-md">
       <input type="file" id="file-input">
       <button onclick="loadFile()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Cargar archivo</button>
       <button onclick="solveSudoku()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Resolver Sudoku</button>
     </div>
-    <div class="bg-white p-6 rounded-md shadow-md"></div>
+    
+    <div class="bg-white p-6 rounded-md shadow-md">
       <button  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Deshacer</button>
       <button  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Rehacer</button>
       <button  class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Historial</button>
     </div> 
   </div>
+
 </body>
 </html>

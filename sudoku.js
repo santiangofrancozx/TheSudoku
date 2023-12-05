@@ -1,7 +1,9 @@
+//import HashTable from './tablaHash.js';
 let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
 }
+const sugerys = new HashTable();
 
 const sudokuMatrixTest = [
     [9, 6, 0, 0, 7, 4, 0, 0, 8],
@@ -51,23 +53,28 @@ function renderSudokuBoardFile(initialMatrix) {
             input.style.backgroundColor = 'white';
             
 
+            
+
             // Establecer el valor inicial desde la matriz proporcionada
             if (initialMatrix[i][j] !== 0) {
                 input.value = initialMatrix[i][j].toString();
                 input.disabled = true; // Deshabilitar la edición de celdas iniciales
                 input.style.backgroundColor = "#CDC9C8";
                 celdasIniciales.push({ fila: i, columna: j });
+                
             }
+            
 
             input.addEventListener('input', function (e) {
                 // Aplicar las restricciones necesarias aquí del sudoku board
                 if (!/^[1-9]?$/.test(this.value)) {
                     this.value = '';
                 }
+            
                 console.log("fila: " + i + "\n" + "Columna: " + j)
                 console.log(this.value)
                 console.log(this.Array)
-                alertBadInput(seeBoard(), i, j, this.value)
+                
                 pintarCeldaRojo(i, j, alertBadInput(seeBoard(), i, j, this.value))
                 if(verifieSudoku(sudokuMatrix)){
                     alert('terminaste canson')
@@ -81,13 +88,47 @@ function renderSudokuBoardFile(initialMatrix) {
                 }
 
             });
+            input.addEventListener('beforeinput', function (e) {
+                // Capturar el valor antes de la acción de entrada
+                const valorAntes = this.value;
+                const id = input.id;
+                sugerys.deleteValue(id,Number(valorAntes));                
+                console.log("Valor antes de la entrada: " + valorAntes);
+                console.log("Sugerys updated: "+sugerys.get(id))
+                const sugerenciasContainer = document.getElementById('sugerencias-container');
+                sugerenciasContainer.innerHTML = '';
+
+                // Sugerencia única
+                const sugerencia = sugerys.get(input.id);
+
+                // Mostrar sugerencia en el contenedor
+                const sugerenciaElement = document.createElement('div');
+                sugerenciaElement.textContent = sugerencia;
+                sugerenciaElement.className = 'sugerencia-item';
+                sugerenciasContainer.appendChild(sugerenciaElement);
+            });
             //event kistener para el foco del input selecciona filas y columnas pinta del color enviado, ''
             input.addEventListener('focus', function() {
-                //pintarCeldaRojo(i, j, alertBadInput(seeBoard(), i, j, this.value));
+
+                sugerys.set(input.id, sugerencias(seeBoard(), i,j));
+                console.log("hash: "+sugerys.get(input.id));
                 pintarCeldaFilaColumna(i,j, '#ECD007',this.value);
+                console.log(sugerencias(seeBoard(),i,j));
                 if(verifieSudoku(initialMatrix)){
                     alert('terminaste canson')
                 }
+                const sugerenciasContainer = document.getElementById('sugerencias-container');
+                sugerenciasContainer.innerHTML = '';
+
+                // Sugerencia única
+                const sugerencia = sugerys.get(input.id);
+
+                // Mostrar sugerencia en el contenedor
+                const sugerenciaElement = document.createElement('div');
+                sugerenciaElement.textContent = sugerencia;
+                sugerenciaElement.className = 'sugerencia-item';
+                sugerenciasContainer.appendChild(sugerenciaElement);
+
             });
             
             // Event listener para cuando el input pierde el foco
@@ -100,8 +141,20 @@ function renderSudokuBoardFile(initialMatrix) {
                     alert('terminaste canson')
                 }
                 //pintarInitialsCells(initialMatrix);
+                const sugerenciasContainer = document.getElementById('sugerencias-container');
+                sugerenciasContainer.innerHTML = '';
+
+                // Sugerencia única
+                const sugerencia = "No hay sugerencias";
+
+                // Mostrar sugerencia en el contenedor
+                const sugerenciaElement = document.createElement('div');
+                sugerenciaElement.textContent = sugerencia;
+                sugerenciaElement.className = 'sugerencia-item';
+                sugerenciasContainer.appendChild(sugerenciaElement);
 
             });
+            
             cell.appendChild(input);
             sudokuBoard.appendChild(cell);
         }
@@ -427,5 +480,15 @@ function verifieSudoku(board) {
     return true;
 }
 
+function sugerencias(matriz, row, col){
+    let sugery = [];
+    
+    for(let i = 1; i <= 9; i++){
+        if(alertBadInput(matriz,row,col,i)){
+            sugery.push(Number(i));
+        }
+    }
+    return sugery;
+}
 
 
