@@ -94,7 +94,8 @@ function renderSudokuBoardFile(initialMatrix) {
             input.addEventListener('blur', function() {
                 pintarCeldaFilaColumna(i,j, 'white',this.value);
                 pintarInitialsCells(initialMatrix);
-                this.style.color = '';
+                
+                //this.style.color = '';
                 if(verifieSudoku(initialMatrix)){
                     alert('terminaste canson')
                 }
@@ -150,6 +151,19 @@ function isValidSudokuDocument(contents) {
         line.trim().split('').map(char => (char === '-' ? 0 : Number(char)))
     );
 
+    if (lines.length !== 9) {
+        return false;
+    }
+
+    // Verificar que cada línea tenga exactamente 9 caracteres
+    const validCharacters = /^[-1-9]$/;
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (trimmedLine.length !== 9 || !trimmedLine.split('').every(char => validCharacters.test(char))) {
+            return false;
+        }
+    }
+
     // //verificar que sea un sudoku valido
     for(let i =0; i<9; i++){
         if(checkRowForDuplicates(arrayOfArrays, i)){
@@ -171,18 +185,7 @@ function isValidSudokuDocument(contents) {
     // }
 
     // Verificar que haya exactamente 9 líneas
-    if (lines.length !== 9) {
-        return false;
-    }
-
-    // Verificar que cada línea tenga exactamente 9 caracteres
-    const validCharacters = /^[-1-9]$/;
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine.length !== 9 || !trimmedLine.split('').every(char => validCharacters.test(char))) {
-            return false;
-        }
-    }
+    
 
     
       
@@ -249,7 +252,9 @@ function seeBoard() {
 //alerta bad inputs return false, all good return true
 function alertBadInput(board, row, col, num) {
     const gridSize = 9;
-
+    if(Number(num) == 0 || num == NaN || num == ''){
+        return true;
+    }
     // Check row and column for conflicts
     for (let i = 0; i < 9; i++) {
         if (Number(board[row][i]) === Number(num) && i !== Number(col)) {
