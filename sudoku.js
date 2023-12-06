@@ -3,7 +3,28 @@ let sudokuMatrix = new Array(9);
 for (let i = 0; i < 9; i++) {
     sudokuMatrix[i] = new Array(9);
 }
+let initialMatrixTemporary;
+
 let sugerys = new HashTable();
+let history = new ListaDoblementeEnlazada();
+let deshacer = new Pila();
+const datosTabla = [
+      {
+        'type': 'input-delete',
+        'valid': true,
+        'num': 5,
+        'row': 1,
+        'col': 2
+      },
+      {
+        'type': 'input-delete',
+        'valid': false,
+        'num': 7,
+        'row': 3,
+        'col': 4
+      },
+      // Agrega más entradas según sea necesario
+    ];
 
 const sudokuMatrixTest = [
     [9, 6, 0, 0, 7, 4, 0, 0, 8],
@@ -20,6 +41,7 @@ const sudokuMatrixTest = [
 document.addEventListener('DOMContentLoaded', function () {
     renderSudokuBoardFile(sudokuMatrixTest);
     updateSugerys();
+    
 });
 
 
@@ -62,15 +84,18 @@ function renderSudokuBoardFile(initialMatrix) {
                 input.disabled = true; // Deshabilitar la edición de celdas iniciales
                 input.style.backgroundColor = "#CDC9C8";
                 celdasIniciales.push({ fila: i, columna: j });
+                initialMatrixTemporary = initialMatrix;
                 
             }
             
 
             input.addEventListener('input', function (e) {
                 // Aplicar las restricciones necesarias aquí del sudoku board
+                const inputType = e.inputType;
                 if (!/^[1-9]?$/.test(this.value)) {
                     this.value = '';
                 }
+                
             
                 console.log("fila: " + i + "\n" + "Columna: " + j)
                 console.log(this.value)
@@ -80,17 +105,37 @@ function renderSudokuBoardFile(initialMatrix) {
                 if(verifieSudoku(sudokuMatrix)){
                     alert('terminaste canson')
                 }
-                
-                
+                const valorAntes = this.value;
+                if (inputType === 'insertText' && this.value !== '') {
+                    addHistory({
+                        'type': 'input-new',
+                        'valid': alertBadInput(seeBoard(), i, j, this.value),
+                        'num': this.value,
+                        'row': i,
+                        'col': j
+                    })
+                }
+                if(alertBadInput(seeBoard(),i,j,this.value)){
+                    deshacer.push({
+                        'type': 'input-new',
+                        'valid': alertBadInput(seeBoard(), i, j, this.value),
+                        'num': this.value,
+                        'row': i,
+                        'col': j
+                    })
+                }
+
                 seeBoard();
                 if (this.value === '') {
                     this.style.backgroundColor = '';
                     this.style.color = '';
                 }
+                
 
             });
             input.addEventListener('beforeinput', function (e) {
                 // Capturar el valor antes de la acción de entrada
+                const inputType = e.inputType;
                 const valorAntes = this.value;
                 const id = input.id;
                 sugerys.deleteValue(id,Number(valorAntes));                
@@ -107,6 +152,16 @@ function renderSudokuBoardFile(initialMatrix) {
                 sugerenciaElement.textContent = sugerencia;
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
+                if (inputType === 'deleteContentBackward' && valorAntes !== '') {
+                    addHistory({
+                        'type': 'input-delete',
+                        'valid': alertBadInput(seeBoard(), i, j, this.value),
+                        'num': valorAntes,
+                        'row': i,
+                        'col': j
+                    })
+                  }
+
             });
             //event kistener para el foco del input selecciona filas y columnas pinta del color enviado, ''
             input.addEventListener('focus', function() {
@@ -501,5 +556,122 @@ function updateSugerys(){
         }
     }
 }
+
+function addHistory(entry){
+    history.addLast(entry)
+    console.log(history.displayEndToFirst())    
+}
+// Función para renderizar la tabla
+function showHistorial() {
+    let historialContainer = document.getElementById('historial-container');
+    //obtener datos del histroial de lista doblemente enlazada como un array
+    let data = history.returnEndToFirst();
+    // crear la cabecera de la tabla del hisotrial
+    let tableHTML = '<table class="min-w-full divide-y divide-gray-200"><thead><tr class="bg-gray-100"><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">type</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">valid</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">num</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">row</th><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">col</th></tr></thead><tbody>';
+
+    // Iterar sobre los datos y agregar filas a la tabla
+    for (let i = 0; i < data.length; i++) {
+        tableHTML += '<tr class="bg-white">';
+        tableHTML += '<td class="px-6 py-4 whitespace-nowrap">' + data[i].type + '</td>';
+        tableHTML += '<td class="px-6 py-4 whitespace-nowrap">' + data[i].valid + '</td>';
+        tableHTML += '<td class="px-6 py-4 whitespace-nowrap">' + data[i].num + '</td>';
+        tableHTML += '<td class="px-6 py-4 whitespace-nowrap">' + data[i].row + '</td>';
+        tableHTML += '<td class="px-6 py-4 whitespace-nowrap">' + data[i].col + '</td>';
+        tableHTML += '</tr>';
+    }
+
+    // Cerrar la etiqueta tbody y table para el renderizado
+    tableHTML += '</tbody></table>';
+
+    // Asignar el HTML generado al contenedor
+    historialContainer.innerHTML = tableHTML;
+}
+
+function deshacer3(){
+    let deshacerTemporary = deshacer.pop();
+    
+    if(deshacerTemporary.type === "input-new"){
+        let sudokuMatrixTemporary = sudokuMatrix;
+        sudokuMatrixTemporary[Number(deshacerTemporary.row)][Number(deshacerTemporary.col)] = 0;
+        console.log(sudokuMatrixTemporary);
+            //sudokuMatrix = sudokuMatrixTemporary;
+            const cellIds = [];
+            for (let i = 0; i < initialMatrixTemporary.length; i++) {
+                for (let j = 0; j < initialMatrixTemporary[i].length; j++) {
+                    if(Number(initialMatrixTemporary[i][j]) !== 0){
+                        const cellId = `cell-${i}-${j}`;
+                        cellIds.push(cellId);
+                    }
+                }
+            }
+            console.log(cellIds);
+            updateSudokuBoard(sudokuMatrixTemporary, cellIds);
+            //add to history
+            addHistory({
+                'type': 'input-undo',
+                'valid': true,
+                'num': deshacerTemporary.num,
+                'row': deshacerTemporary.row,
+                'col': deshacerTemporary.col
+            })
+        } else if(deshacerTemporary.type === "input-delete"){
+            let sudokuMatrixTemporary = sudokuMatrix;
+            sudokuMatrixTemporary[Number(deshacerTemporary.row)][Number(deshacerTemporary.col)] = Number(deshacerTemporary.num);
+            console.log(sudokuMatrixTemporary);
+            //sudokuMatrix = sudokuMatrixTemporary;
+            const cellIds = [];
+            for (let i = 0; i < initialMatrixTemporary.length; i++) {
+                for (let j = 0; j < initialMatrixTemporary[i].length; j++) {
+                    if(Number(initialMatrixTemporary[i][j]) !== 0){
+                        const cellId = `cell-${i}-${j}`;
+                        cellIds.push(cellId);
+                    }
+                }
+            }
+            console.log(cellIds);
+            updateSudokuBoard(sudokuMatrixTemporary, cellIds);
+            //add to history
+            addHistory({
+                'type': 'input-undo',
+                'valid': true,
+                'num': deshacerTemporary.num,
+                'row': deshacerTemporary.row,
+                'col': deshacerTemporary.col
+            })
+        }
+    
+}
+
+function updateSudokuBoard(newMatrix, celdasIniciales) {
+    const sudokuBoard = document.getElementById('sudoku-board');
+    const inputs = sudokuBoard.querySelectorAll('input');
+
+    let index = 0;
+
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const value = newMatrix[i][j];
+            const input = inputs[index];
+            const cellId = `cell-${i}-${j}`;
+
+            if (celdasIniciales.includes(cellId)) {
+                input.disabled = true; // Mantener inhabilitadas las celdas iniciales
+                input.style.backgroundColor = "#CDC9C8";
+            } else {
+                input.disabled = false; // Habilitar las celdas no iniciales
+                input.style.backgroundColor = 'white';
+            }
+
+            input.value = value !== 0 ? value.toString() : '';
+            index++;
+        }
+    }
+}
+
+
+
+
+
+
 
 

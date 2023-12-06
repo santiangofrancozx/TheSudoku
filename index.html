@@ -15,9 +15,6 @@
 </head>
 
 <body class="bg-blue-900 flex items-center justify-center h-screen">
-
-  <script src="tablaHash.js"></script>
-  <script src="sudoku.js"></script>
   
   <div class="bg-white p-6 rounded-md shadow-md">
     <h1 class="text-2xl font-bold mb-4">Sudoku Board</h1>
@@ -33,11 +30,22 @@
     </div>
     
     <div class="bg-white p-6 rounded-md shadow-md">
-      <button  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Deshacer</button>
+      <button  onclick="deshacer3()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Deshacer</button>
       <button  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Rehacer</button>
-      <button  class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Historial</button>
+      <button onclick="showHistorial()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200">Historial</button>
+      
     </div> 
+    <div id="historial-container" class="mt-4 max-h-48 overflow-y-auto border p-4">
+      <!-- Tu contenido histórico aquí -->
+    </div>
+  
   </div>
+
+  <script src="cola.js"></script>
+  <script src="listaDoblementeEnlazada.js"></script>
+  <script src="pila.js"></script>
+  <script src="tablaHash.js"></script>
+  <script src="sudoku.js"></script>
 
 </body>
 </html>

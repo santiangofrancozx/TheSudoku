@@ -60,7 +60,7 @@ class HashTable {
         }
       }
 
-      deleteValue(key, valueToDelete) {
+    deleteValue(key, valueToDelete) {
         const index = this.hash(key);
     
         if (this.table[index]) {
@@ -76,19 +76,6 @@ class HashTable {
             }
           }
         }
-      }
-  }
-  
-  //export default HashTable;
-  
-//   // Ejemplo de uso
-//   const myHashTable = new HashTable();
-  
-//   myHashTable.set("uno", 1);
-//   myHashTable.set("dos", 2);
-//   myHashTable.set("tres", 3);
-  
-//   console.log(myHashTable.get("uno")); // Output: 1
-//   console.log(myHashTable.get("dos")); // Output: 2
-//   console.log(myHashTable.get("cuatro")); // Output: undefined
+    }
+}
   
