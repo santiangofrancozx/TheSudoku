@@ -8,6 +8,7 @@ let initialMatrixTemporary;
 let sugerys = new HashTable();
 let history = new ListaDoblementeEnlazada();
 let deshacer = new Pila();
+let rehacer = new Cola();
 const datosTabla = [
       {
         'type': 'input-delete',
@@ -115,7 +116,7 @@ function renderSudokuBoardFile(initialMatrix) {
                         'col': j
                     })
                 }
-                if(alertBadInput(seeBoard(),i,j,this.value)){
+                if(alertBadInput(seeBoard(),i,j,this.value) && inputType !== 'deleteContentBackward'){
                     deshacer.push({
                         'type': 'input-new',
                         'valid': alertBadInput(seeBoard(), i, j, this.value),
@@ -123,7 +124,10 @@ function renderSudokuBoardFile(initialMatrix) {
                         'row': i,
                         'col': j
                     })
+                    //rehacer
                 }
+                console.log("deshacer cola")
+                console.log(deshacer);
 
                 seeBoard();
                 if (this.value === '') {
@@ -160,7 +164,24 @@ function renderSudokuBoardFile(initialMatrix) {
                         'row': i,
                         'col': j
                     })
-                  }
+                    if(alertBadInput(seeBoard(),i,j,valorAntes)){
+                        deshacer.push({
+                            'type': 'input-delete',
+                            'valid': alertBadInput(seeBoard(), i, j, valorAntes),
+                            'num': this.value,
+                            'row': i,
+                            'col': j
+                        })
+                        // rehacer, solo se puede rehacer si algo se deshizo, backward
+                        rehacer.enqueue({
+                            'type': 'input-delete',
+                            'valid': alertBadInput(seeBoard(), i, j, valorAntes),
+                            'num': this.value,
+                            'row': i,
+                            'col': j
+                        })
+                    }
+                }
 
             });
             //event kistener para el foco del input selecciona filas y columnas pinta del color enviado, ''
@@ -189,6 +210,9 @@ function renderSudokuBoardFile(initialMatrix) {
             // Event listener para cuando el input pierde el foco
             // Event listener para cuando el input pierde el foco
             input.addEventListener('blur', function() {
+
+                pintarCeldaFilaColumna(i,j, 'white',this.value);
+                this.style.color = '';
                 
                 const isValidInput = alertBadInput(seeBoard(), i, j, this.value);
             
@@ -208,8 +232,8 @@ function renderSudokuBoardFile(initialMatrix) {
                 sugerenciaElement.textContent = sugerencia;
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
-                pintarCeldaBlanco(i,j)
-                this.value = '';
+                pintarCeldaBlanco(i,j,isValidInput);
+                this.value = isValidInput ? this.value : '';
             });
 
             
@@ -408,12 +432,14 @@ function pintarCeldaRojo(fila, columna, booleanValue) {
         celda.style.color = 'white';
     }
 }
-function pintarCeldaBlanco(fila, columna) {
+function pintarCeldaBlanco(fila, columna, boleanValue) {
     // Obtener la celda correspondiente y aplicar el estilo
-    const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
-    celda.style.backgroundColor = 'white';
-    celda.style.color = 'white';
-    
+    if(!boleanValue){
+        const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
+        celda.style.backgroundColor = '';
+        celda.style.color = '';
+        
+    }
 }
 function pintarInitialsCells(initialMatrix){
     for (let i = 0; i < 9; i++) {
@@ -599,8 +625,11 @@ function showHistorial() {
 
 function deshacer3(){
     let deshacerTemporary = deshacer.pop();
-    
+    console.log("Deshacer pila: "+deshacer)
+    console.log(deshacer.pop())
+    console.log("Deschaer tipo antes de ifelse"+deshacerTemporary.type)
     if(deshacerTemporary.type === "input-new"){
+        console.log("undo input new")
         let sudokuMatrixTemporary = sudokuMatrix;
         sudokuMatrixTemporary[Number(deshacerTemporary.row)][Number(deshacerTemporary.col)] = 0;
         console.log(sudokuMatrixTemporary);
@@ -625,6 +654,7 @@ function deshacer3(){
                 'col': deshacerTemporary.col
             })
         } else if(deshacerTemporary.type === "input-delete"){
+            console.log("undo input-delete")
             let sudokuMatrixTemporary = sudokuMatrix;
             sudokuMatrixTemporary[Number(deshacerTemporary.row)][Number(deshacerTemporary.col)] = Number(deshacerTemporary.num);
             console.log(sudokuMatrixTemporary);
@@ -650,6 +680,39 @@ function deshacer3(){
             })
         }
     
+}
+
+function rehacer3(){
+    let rehacerTemporary = rehacer.dequeue();
+    console.log("rehacer cola: "+rehacer);
+    console.log(rehacer.dequeue());
+   
+    
+        console.log("redo input-delete")
+        let sudokuMatrixTemporary = sudokuMatrix;
+        sudokuMatrixTemporary[Number(rehacerTemporary.row)][Number(rehacerTemporary.col)] = Number(rehacerTemporary.num);
+        console.log("debbugin de rehacer sudoku matrix temporary")
+        console.log(sudokuMatrixTemporary);
+            //sudokuMatrix = sudokuMatrixTemporary;
+            const cellIds = [];
+            for (let i = 0; i < initialMatrixTemporary.length; i++) {
+                for (let j = 0; j < initialMatrixTemporary[i].length; j++) {
+                    if(Number(initialMatrixTemporary[i][j]) !== 0){
+                        const cellId = `cell-${i}-${j}`;
+                        cellIds.push(cellId);
+                    }
+                }
+            }
+            console.log(cellIds);
+            updateSudokuBoard(sudokuMatrixTemporary, cellIds);
+            //add to history
+            addHistory({
+                'type': 'input-redo',
+                'valid': true,
+                'num': rehacerTemporary.num,
+                'row': rehacerTemporary.row,
+                'col': rehacerTemporary.col
+            })
 }
 
 function updateSudokuBoard(newMatrix, celdasIniciales) {
