@@ -187,28 +187,31 @@ function renderSudokuBoardFile(initialMatrix) {
             });
             
             // Event listener para cuando el input pierde el foco
+            // Event listener para cuando el input pierde el foco
             input.addEventListener('blur', function() {
-                pintarCeldaFilaColumna(i,j, 'white',this.value);
-                pintarInitialsCells(initialMatrix);
                 
-                //this.style.color = '';
-                if(verifieSudoku(initialMatrix)){
-                    alert('terminaste canson')
+                const isValidInput = alertBadInput(seeBoard(), i, j, this.value);
+            
+                if (verifieSudoku(initialMatrix)) {
+                    alert('¡Terminaste el sudoku!');
                 }
-                //pintarInitialsCells(initialMatrix);
+            
+                // Limpiar sugerencias
                 const sugerenciasContainer = document.getElementById('sugerencias-container');
                 sugerenciasContainer.innerHTML = '';
-
+            
                 // Sugerencia única
-                const sugerencia = "No hay sugerencias";
-
+                const sugerencia = isValidInput ? 'No hay sugerencias' : 'Entrada no válida';
+            
                 // Mostrar sugerencia en el contenedor
                 const sugerenciaElement = document.createElement('div');
                 sugerenciaElement.textContent = sugerencia;
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
-
+                pintarCeldaBlanco(i,j)
+                this.value = '';
             });
+
             
             cell.appendChild(input);
             sudokuBoard.appendChild(cell);
@@ -404,6 +407,13 @@ function pintarCeldaRojo(fila, columna, booleanValue) {
         celda.style.backgroundColor = 'red';
         celda.style.color = 'white';
     }
+}
+function pintarCeldaBlanco(fila, columna) {
+    // Obtener la celda correspondiente y aplicar el estilo
+    const celda = document.querySelector(`#sudoku-board > div:nth-child(${fila * 9 + columna + 1}) > input`);
+    celda.style.backgroundColor = 'white';
+    celda.style.color = 'white';
+    
 }
 function pintarInitialsCells(initialMatrix){
     for (let i = 0; i < 9; i++) {
@@ -667,11 +677,3 @@ function updateSudokuBoard(newMatrix, celdasIniciales) {
         }
     }
 }
-
-
-
-
-
-
-
-
