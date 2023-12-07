@@ -125,6 +125,7 @@ function renderSudokuBoardFile(initialMatrix) {
                 // Capturar el valor antes de la acción de entrada
                 const inputType = e.inputType;
                 const valorAntes = this.value;
+                const isBadInput = alertBadInput(seeBoard(), i, j, valorAntes);
                 const id = input.id;
                 sugerys.deleteValue(id,Number(valorAntes));                
                 console.log("Valor antes de la entrada: " + valorAntes);
@@ -141,6 +142,14 @@ function renderSudokuBoardFile(initialMatrix) {
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
               //this.value = bad ? this.value : '';
+              if (inputType === 'deleteContentBackward') {
+                if (isBadInput) {
+                    addHistory({'type': 'input-delete', 'valid': true, 'num': valorAntes, 'row': i, 'col': j});
+                    rehacer.push({'type': 'input-delete', 'valid': true, 'num': valorAntes, 'row': i, 'col': j});
+                } else {
+                    addHistory({'type': 'input-delete', 'valid': false, 'num': valorAntes, 'row': i, 'col': j});
+                }
+            }
               
 
             });
