@@ -712,3 +712,19 @@ function updateSudokuBoard(newMatrix, celdasIniciales) {
         }
     }
 }
+
+function exportSudokuAsText() {
+    const sudokuMatrix = seeBoard() // Assuming you have a function named getSudokuMatrix to get the current Sudoku matrix
+    const textContent = sudokuMatrix.map(row => row.join('').replace(/0/g, '-')).join('\n');
+    const blob = new Blob([textContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sudoku.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+

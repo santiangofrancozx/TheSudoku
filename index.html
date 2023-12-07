@@ -16,12 +16,12 @@
     <div id="sugerencias-container" class="mt-2 max-h-32 overflow-y-auto"></div>
 
     <div id="sudoku-board" class="grid grid-cols-9 gap-1">
-      <!--My Sudoku Board-->
+      <!-- My Sudoku Board -->
     </div>
 
     <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div>
-        <input type="file" id="file-input" class="hidden" accept=".txt, .csv"> <!-- Accepts txt and csv files -->
+        <input type="file" id="file-input" class="hidden" accept=".txt, .csv">
         <label for="file-input" class="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 block text-center">
           Choose File
         </label>
@@ -37,6 +37,9 @@
       </div>
       <div>
         <button onclick="rehacer3()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Redo</button>
+      </div>
+      <div>
+        <button onclick="exportSudokuAsText()" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Print Sudoku</button>
       </div>
       <div class="sm:col-span-2 lg:col-span-3">
         <button onclick="showHistorial()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">History</button>
@@ -54,6 +57,11 @@
   <script src="pila.js"></script>
   <script src="tablaHash.js"></script>
   <script src="sudoku.js"></script>
+  <script>
+    function imprimirSudoku() {
+      window.print();
+    }
+  </script>
 </body>
 
 </html>
