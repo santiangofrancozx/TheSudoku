@@ -9,23 +9,7 @@ let sugerys = new HashTable();
 let history = new ListaDoblementeEnlazada();
 let deshacer = new Pila();
 let rehacer = new Pila();
-const datosTabla = [
-      {
-        'type': 'input-delete',
-        'valid': true,
-        'num': 5,
-        'row': 1,
-        'col': 2
-      },
-      {
-        'type': 'input-delete',
-        'valid': false,
-        'num': 7,
-        'row': 3,
-        'col': 4
-      },
-      // Agrega más entradas según sea necesario
-    ];
+
 
 const sudokuMatrixTest = [
     [9, 6, 0, 0, 7, 4, 0, 0, 8],
@@ -130,7 +114,7 @@ function renderSudokuBoardFile(initialMatrix) {
                     this.style.backgroundColor = '';
                     this.style.color = '';
                 }
-                
+                updateSugerys();
 
                 //cambiar para que nunca entre en la matriz pero si se vea graficamente el
                 //this.value = bad ? this.value : '';
