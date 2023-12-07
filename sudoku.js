@@ -52,7 +52,7 @@ function renderSudokuBoardFile(initialMatrix) {
 
             // Crear un campo de entrada para las entradas del tablero de Sudoku
             const input = document.createElement('input');
-            input.type = 'text';
+            input.type = 'number';
             input.maxLength = '1';
             input.style.width = '50%';
             input.style.height = '50%';
@@ -60,6 +60,7 @@ function renderSudokuBoardFile(initialMatrix) {
             input.id = `cell-${i}-${j}`;
             input.className = "cell";
             input.style.backgroundColor = 'white';
+            input.inputmode = 'numeric';
             
 
             

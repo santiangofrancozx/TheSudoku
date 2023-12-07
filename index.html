@@ -6,6 +6,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sudoku Board</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Additional styles for responsiveness */
+    @media (max-width: 768px) {
+      #sudoku-board {
+        grid-template-columns: repeat(9, minmax(20px, 1fr));
+      }
+
+      .grid-cols-1 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .sm\:col-span-2 {
+        grid-column: span 2 / span 2;
+      }
+
+      .lg\:col-span-3 {
+        grid-column: span 3 / span 3;
+      }
+    }
+  </style>
 </head>
 
 <body class="bg-blue-900 flex items-center justify-center h-screen">
