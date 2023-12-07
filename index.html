@@ -16,32 +16,35 @@
     <div id="sugerencias-container" class="mt-2 max-h-32 overflow-y-auto"></div>
 
     <div id="sudoku-board" class="grid grid-cols-9 gap-1">
-      <!--My Suodku Board-->
+      <!--My Sudoku Board-->
     </div>
 
     <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div>
-        <input type="file" id="file-input" class="hidden">
+        <input type="file" id="file-input" class="hidden" accept=".txt, .csv"> <!-- Accepts txt and csv files -->
         <label for="file-input" class="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 block text-center">
-          Cargar archivo
+          Choose File
         </label>
       </div>
       <div>
-        <button onclick="solveSudoku()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Resolver Sudoku</button>
+        <button onclick="loadFile()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Load File</button>
       </div>
       <div>
-        <button onclick="deshacer3()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Deshacer</button>
+        <button onclick="solveSudoku()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Solve Sudoku</button>
       </div>
       <div>
-        <button onclick="rehacer3()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Rehacer</button>
+        <button onclick="deshacer3()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Undo</button>
+      </div>
+      <div>
+        <button onclick="rehacer3()" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Redo</button>
       </div>
       <div class="sm:col-span-2 lg:col-span-3">
-        <button onclick="showHistorial()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">Historial</button>
+        <button onclick="showHistorial()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-all duration-200 w-full">History</button>
       </div>
     </div>
 
     <div id="historial-container" class="mt-4 max-h-48 overflow-y-auto border p-4">
-      <!-- Tu contenido histórico aquí -->
+      <!-- Your historical content here -->
     </div>
 
   </div>
@@ -51,7 +54,6 @@
   <script src="pila.js"></script>
   <script src="tablaHash.js"></script>
   <script src="sudoku.js"></script>
-
 </body>
 
 </html>

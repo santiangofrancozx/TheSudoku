@@ -285,16 +285,18 @@ function isValidSudokuDocument(contents) {
             return false;
         }
     }
-    // for(let i = 0; i<9; i+3){
-    //     for(let j = 0; j<9; j+3){
-    //         if(checkSubgridForDuplicates(arrayOfArrays, i, j)){
-    //             alert("No tamos melos en los sectores brodel");
-    //             return false;
-    //         }
-    //     }
-    // }
 
-    // Verificar que haya exactamente 9 líneas
+    //check sectors
+    for(let i = 0; i<9; i++){
+        for(let j = 0; j<9; j++){
+            if(checkSubgridForDuplicates(arrayOfArrays, i, j)){
+                alert("No tamos melos en los sectores brodel");
+                return false;
+            }
+        }
+    }
+
+    
     
 
     
@@ -496,7 +498,7 @@ async function solveSudoku() {
                 if (!cell.classList.contains("user-input")) {
                     cell.value = sudokuArray[row][col];
                     cell.classList.add("solved");
-                    //           await sleep(20); // Add a delay for visualization
+                    //await sleep(20); // Add a delay for visualization
                 }
             }
         }
