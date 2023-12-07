@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function renderSudokuBoardFile(initialMatrix) {
+
     const sudokuBoard = document.getElementById('sudoku-board');
     const celdasIniciales = [];
 
@@ -175,7 +176,7 @@ function renderSudokuBoardFile(initialMatrix) {
                 sugerenciaElement.textContent = sugerencia;
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
-
+                
             });
             
             // Event listener para cuando el input pierde el foco
@@ -206,9 +207,8 @@ function renderSudokuBoardFile(initialMatrix) {
                 sugerenciaElement.className = 'sugerencia-item';
                 sugerenciasContainer.appendChild(sugerenciaElement);
                 pintarCeldaBlanco(i,j,isValidInput);
-                
+                pintarInitialsCells(initialMatrixTemporary);
 
-                
             });
 
     
