@@ -1,3 +1,3 @@
 # TheSudoku
 Test:https://santiangofrancozx.github.io/TheSudoku/
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcxOTM1NzM0MiwianRpIjoiOGJjZTUwYzQtODRjNS00MmY1LTk4YTctYjRiNDQ3NjYxMmVmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImZvcmlzX2NoYWxsZW5nZSIsIm5iZiI6MTcxOTM1NzM0MiwiY3NyZiI6IjZhNzk2ZGEyLTI4YzUtNGRjNC1iZGYzLWMyZmIwMGZhNzJmMCIsImV4cCI6MTcxOTM2MDk0Mn0.g-Xa7MPq5zZJ7zvUmRcObg-lr4lrJl_Gb-DLbpIDRRE
+{"username": "foris_challenge", "password": "ForisChallenge"}
